@@ -12,9 +12,12 @@ Copyright 2014--2017 Michael Hayes, UCECE
 """
 
 from __future__ import absolute_import, print_function
-from pkg_resources import get_distribution
+from pkg_resources import get_distribution, DistributionNotFound
 
-__version__ = get_distribution('lcapy').version
+try:
+    __version__ = get_distribution('lcapy').version
+except DistributionNotFound:
+    __version__ = None
 
 import sys
 if sys.version_info[0] == 2 and sys.version_info[1] < 6:
