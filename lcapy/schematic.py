@@ -81,7 +81,8 @@ class SchematicOpts(Opts):
              'node_spacing' : 2.0,
              'append' : '',
              'help_lines' : 0.0,
-             'style' : 'american'})
+             'style' : 'american',
+             'standalone': True})
 
 
 class EngFormat(object):
@@ -579,6 +580,7 @@ class Schematic(NetfileMixin):
         self.cpt_size = float(kwargs.pop('cpt_size', 1.2))
         self.node_spacing = float(kwargs.pop('node_spacing', 2.0))
         self.scale = float(kwargs.pop('scale', 1.0))
+        standalone = bool(kwargs.pop('standalone', True))
 
         if style == 'american':
             style_args = 'american currents, american voltages'
@@ -615,11 +617,14 @@ class Schematic(NetfileMixin):
             return
 
         # Need amsmath for operatorname
-        template = ('\\documentclass[a4paper]{standalone}\n'
-                    '\\usepackage{amsmath}\n'
-                    '\\usepackage{circuitikz}\n'
-                    '\\usetikzlibrary{fit, shapes}\n'
-                    '\\begin{document}\n%s\\end{document}')
+        if standalone:
+            template = ('\\documentclass[a4paper]{standalone}\n'
+                        '\\usepackage{amsmath}\n'
+                        '\\usepackage{circuitikz}\n'
+                        '\\usetikzlibrary{fit, shapes}\n'
+                        '\\begin{document}\n%s\\end{document}')
+        else:
+            template = '%s'
         content = template % content
 
         tex_filename = filename.replace(ext, '.tex')
@@ -680,6 +685,8 @@ class Schematic(NetfileMixin):
            oversample: oversampling factor for png or pdf files
            help_lines: distance between lines in grid, default 0.0 (disabled)
            debug: True to display debug information
+           standalone: Include \"standalone\" documentclass in output file's
+                        preamble. True by default.
         """
 
         for key, val in opts.items():
