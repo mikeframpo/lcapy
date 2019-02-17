@@ -131,6 +131,16 @@ def main (argv=None):
     if options.pdb:
         sys.excepthook = schtex_exception
         
+    from pkg_resources import get_distribution, DistributionNotFound
+    
+    try:
+        get_distribution('lcapy')
+    except DistributionNotFound:
+        # if lcapy is not installed as a distribution then we assume that
+        # this script is being run directly from the repo
+        repopath = os.path.join(os.path.split(__file__)[0], '../')
+        sys.path.append(repopath)
+    
     from lcapy import Circuit
 
     cct = Circuit(infilename)

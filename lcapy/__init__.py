@@ -21,6 +21,7 @@ try:
     __version__ = get_distribution('lcapy').version
 except DistributionNotFound:
     print('Alert: lcapy is running directly from source tree.')
+    __version__ = None
 
 import sys
 if sys.version_info[0] == 2 and sys.version_info[1] < 6:
